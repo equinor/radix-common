@@ -9,8 +9,8 @@ import (
 
 // RadixMiddleware The middleware between router and radix handler functions
 type RadixMiddleware struct {
-	path    string
-	method  string
+	Path    string
+	Method  string
 	next    models.RadixHandlerFunc
 	handled func(*RadixMiddleware, http.ResponseWriter, *http.Request, time.Time)
 }
@@ -18,8 +18,8 @@ type RadixMiddleware struct {
 // NewRadixMiddleware Constructor for radix middleware
 func NewRadixMiddleware(path, method string, next models.RadixHandlerFunc, handled func(*RadixMiddleware, http.ResponseWriter, *http.Request, time.Time)) *RadixMiddleware {
 	handler := &RadixMiddleware{
-		path:    path,
-		method:  method,
+		Path:    path,
+		Method:  method,
 		next:    next,
 		handled: handled,
 	}
