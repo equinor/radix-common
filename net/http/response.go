@@ -10,6 +10,7 @@ import (
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 )
 
 // Error Representation of errors in the API. These are divided into a small
@@ -20,7 +21,7 @@ import (
 type Error struct {
 	Type Type
 	// a message that can be printed out for the user
-	Message string
+	Message string `json:"message"`
 	// the underlying error that can be e.g., logged for developers to look at
 	Err error
 }
@@ -49,12 +50,18 @@ const (
 
 // MarshalJSON Writes error as json
 func (e *Error) MarshalJSON() ([]byte, error) {
+	var errMsg string
+	if e.Err != nil {
+		errMsg = e.Err.Error()
+	}
 	jsonable := &struct {
 		Type    string `json:"type"`
 		Message string `json:"message"`
+		Err     string `json:"error,omitempty"`
 	}{
 		Type:    string(e.Type),
 		Message: e.Message,
+		Err:     errMsg,
 	}
 	return json.Marshal(jsonable)
 }
@@ -64,12 +71,16 @@ func (e *Error) UnmarshalJSON(data []byte) error {
 	jsonable := &struct {
 		Type    string `json:"type"`
 		Message string `json:"message"`
+		Err     string `json:"error,omitempty"`
 	}{}
 	if err := json.Unmarshal(data, &jsonable); err != nil {
 		return err
 	}
 	e.Type = Type(jsonable.Type)
 	e.Message = jsonable.Message
+	if jsonable.Err != "" {
+		e.Err = errors.New(jsonable.Err)
+	}
 	return nil
 }
 
@@ -78,6 +89,32 @@ func UnexpectedError(message string, underlyingError error) error {
 	return &Error{
 		Type:    Server,
 		Err:     underlyingError,
+		Message: message,
+	}
+}
+
+// TypeMissingError indication of underlying type missing
+func TypeMissingError(message string, underlyingError error) error {
+	return &Error{
+		Type:    Missing,
+		Err:     underlyingError,
+		Message: message,
+	}
+}
+
+// ValidationError Used for indication of validation errors
+func ValidationError(kind, message string) error {
+	return &Error{
+		Type:    User,
+		Err:     fmt.Errorf("%s failed validation", kind),
+		Message: message,
+	}
+}
+
+//NotFoundError No found error
+func NotFoundError(message string) error {
+	return &Error{
+		Type:    Missing,
 		Message: message,
 	}
 }
@@ -91,12 +128,12 @@ func ApplicationNotFoundError(message string, underlyingError error) error {
 	}
 }
 
-// CoverAllError Cover all other errors
-func CoverAllError(err error) *Error {
+// CoverAllError Cover all other errors for requester type Type
+func CoverAllError(err error, requesterType Type) *Error {
 	return &Error{
-		Type:    Server,
+		Type:    requesterType,
 		Err:     err,
-		Message: "Internal server error",
+		Message: `Error: ` + err.Error(),
 	}
 }
 
@@ -137,6 +174,13 @@ func StringResponse(w http.ResponseWriter, r *http.Request, result string) {
 	w.Write([]byte(result))
 }
 
+// ByteArrayResponse Used for response data. I.e. image
+func ByteArrayResponse(w http.ResponseWriter, r *http.Request, contentType string, result []byte) {
+	w.Header().Set("Content-Type", contentType)
+	w.WriteHeader(http.StatusOK)
+	w.Write(result)
+}
+
 // JSONResponse Marshals response with header
 func JSONResponse(w http.ResponseWriter, r *http.Request, result interface{}) {
 	body, err := json.Marshal(result)
@@ -158,8 +202,17 @@ func ReaderFileResponse(w http.ResponseWriter, reader io.Reader, fileName, conte
 	io.Copy(w, reader)
 }
 
-// ErrorResponse Marshals error
+// ErrorResponse Marshals error for user requester
 func ErrorResponse(w http.ResponseWriter, r *http.Request, apiError error) {
+	errorResponseFor(User, w, r, apiError)
+}
+
+// ErrorResponseForServer Marshals error for server requester
+func ErrorResponseForServer(w http.ResponseWriter, r *http.Request, apiError error) {
+	errorResponseFor(Server, w, r, apiError)
+}
+
+func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request, apiError error) {
 	var outErr *Error
 	var code int
 	var ok bool
@@ -168,13 +221,21 @@ func ErrorResponse(w http.ResponseWriter, r *http.Request, apiError error) {
 
 	err := errors.Cause(apiError)
 	if outErr, ok = err.(*Error); !ok {
-		outErr = CoverAllError(apiError)
+		outErr = CoverAllError(apiError, requesterType)
 	}
+
+	log.Error(outErr.Message)
 
 	switch apiError.(type) {
 	case *url.Error:
 		// Reflect any underlying network error
 		writeErrorWithCode(w, r, http.StatusInternalServerError, outErr)
+
+	case *k8serrors.StatusError:
+		// Reflect any underlying error from Kubernetes API
+		se := apiError.(*k8serrors.StatusError)
+		writeErrorWithCode(w, r, int(se.ErrStatus.Code), outErr)
+
 	default:
 		switch outErr.Type {
 		case Missing:
