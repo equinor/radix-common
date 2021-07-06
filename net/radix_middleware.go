@@ -9,30 +9,34 @@ import (
 
 // RadixMiddleware The middleware between router and radix handler functions
 type RadixMiddleware struct {
-	path   string
-	method string
-	next   models.RadixHandlerFunc
+	Path    string
+	Method  string
+	next    models.RadixHandlerFunc
+	handled func(*RadixMiddleware, http.ResponseWriter, *http.Request, time.Time)
 }
 
 // NewRadixMiddleware Constructor for radix middleware
-func NewRadixMiddleware(path, method string, next models.RadixHandlerFunc) *RadixMiddleware {
+func NewRadixMiddleware(path, method string, next models.RadixHandlerFunc, handled func(*RadixMiddleware, http.ResponseWriter, *http.Request, time.Time)) *RadixMiddleware {
 	handler := &RadixMiddleware{
 		path,
 		method,
 		next,
+		handled,
 	}
 
 	return handler
 }
 
 // Handle Wraps radix handler methods
-func (handler *RadixMiddleware) Handle(w http.ResponseWriter, r *http.Request, done func(*RadixMiddleware, http.ResponseWriter, *http.Request, time.Time)) {
+func (handler *RadixMiddleware) Handle(w http.ResponseWriter, r *http.Request) {
 	startTime := time.Now()
 
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 
 	defer func() {
-		done(handler, w, r, startTime)
+		if handler.handled != nil {
+			handler.handled(handler, w, r, startTime)
+		}
 	}()
 
 	token, err := httpUtils.GetBearerTokenFromHeader(r)
