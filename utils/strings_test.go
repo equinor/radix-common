@@ -1,35 +1,59 @@
 package utils
 
 import (
-	"testing"
-
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-func TestGetGithubCloneURLFromRepo_ValidRepo_CreatesValidClone(t *testing.T) {
-	expected := "git@github.com:Equinor/my-app.git"
-	actual := GetGithubCloneURLFromRepo("https://github.com/Equinor/my-app")
-
-	assert.Equal(t, expected, actual, "getCloneURLFromRepo - not equal")
-}
-
-func TestGetGithubCloneURLFromRepo_EmptyRepo_CreatesEmptyClone(t *testing.T) {
-	expected := ""
-	actual := GetGithubCloneURLFromRepo("")
-
-	assert.Equal(t, expected, actual, "getCloneURLFromRepo - not equal")
-}
-
-func TestCloneToRepositoryURL_ValidUrl(t *testing.T) {
-	cloneURL := "git@github.com:equinor/radix-api.git"
-	repo := GetGithubRepositoryURLFromCloneURL(cloneURL)
-
-	assert.Equal(t, "https://github.com/equinor/radix-api", repo)
-}
-
-func TestCloneToRepositoryURL_EmptyURL(t *testing.T) {
-	cloneURL := ""
-	repo := GetGithubRepositoryURLFromCloneURL(cloneURL)
-
-	assert.Equal(t, "", repo)
+func Test_EqualLists(t *testing.T) {
+	testScenarios := []struct {
+		name          string
+		list1         []string
+		list2         []string
+		expectedEqual bool
+	}{
+		{
+			"Equal lists with same order",
+			[]string{"1", "2a", "3bc"},
+			[]string{"1", "2a", "3bc"},
+			true,
+		},
+		{
+			"Equal lists with different orders",
+			[]string{"1", "3bc", "2a"},
+			[]string{"2a", "1", "3bc"},
+			true,
+		},
+		{
+			"Equal lists with one item",
+			[]string{"1a"},
+			[]string{"1a"},
+			true,
+		},
+		{
+			"Empty lists",
+			[]string{},
+			[]string{},
+			true,
+		},
+		{
+			"Not equal lists with one item",
+			[]string{"1a"},
+			[]string{"2b"},
+			false,
+		},
+		{
+			"Not equal lists",
+			[]string{"1a", "2b"},
+			[]string{"2b", "3cd"},
+			false,
+		},
+	}
+	t.Run("", func(t *testing.T) {
+		t.Parallel()
+		for _, scenario := range testScenarios {
+			equals := EqualStringLists(scenario.list1, scenario.list2)
+			assert.Equal(t, scenario.expectedEqual, equals, scenario.name)
+		}
+	})
 }
