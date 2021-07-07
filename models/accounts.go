@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	jwt "github.com/dgrijalva/jwt-go/v4"
 )
 
 // NewAccounts creates a new Accounts struct
