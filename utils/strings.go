@@ -14,6 +14,19 @@ func StringPtr(s string) *string {
 	return &s
 }
 
+// StringUnPtr returns a string from a string pointer.
+func StringUnPtr(s *string) string {
+	return StringUnPtrDefault(s, "")
+}
+
+// StringUnPtrDefault returns a string from a string pointer, or default value, if nil.
+func StringUnPtrDefault(s *string, defaultValue string) string {
+	if s == nil {
+		return defaultValue
+	}
+	return *s
+}
+
 func EqualStringsAsPtr(s1, s2 *string) bool {
 	return ((s1 == nil) == (s2 == nil)) && (s1 != nil && strings.EqualFold(*s1, *s2))
 }
