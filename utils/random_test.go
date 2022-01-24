@@ -41,3 +41,13 @@ func Test_random_string(t *testing.T) {
 
 	assert.NotEqual(t, rand1, rand2)
 }
+
+func Test_GenerateRandomKey(t *testing.T) {
+	key1 := GenerateRandomKey(20)
+	key2 := GenerateRandomKey(20)
+	key3 := GenerateRandomKey(15)
+	assert.NotEqual(t, key1, key2)
+	assert.Len(t, key1, 20)
+	assert.Len(t, key2, 20)
+	assert.Len(t, key3, 15)
+}
