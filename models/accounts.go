@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 
-	jwt "github.com/dgrijalva/jwt-go/v4"
+	jwt "github.com/golang-jwt/jwt/v4"
 )
 
 // NewAccounts creates a new Accounts struct
@@ -37,9 +37,12 @@ func (accounts Accounts) GetToken() string {
 	return accounts.token
 }
 
+// GetUserPrincipleNameFromToken reads the upn claim value from a token
+// The JWT signature is not validated, so ensure that the token signature is valid before using this function
 func GetUserPrincipleNameFromToken(token string) (string, error) {
 	claims := jwt.MapClaims{}
-	parser := jwt.Parser{}
+	parser := jwt.NewParser()
+
 	_, _, err := parser.ParseUnverified(token, claims)
 	if err != nil {
 		return "", fmt.Errorf("could not parse token (%v)", err)
