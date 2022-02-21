@@ -38,7 +38,7 @@ func (accounts Accounts) GetToken() string {
 }
 
 // GetUserPrincipleNameFromToken reads the upn claim value from a token
-// The JWT signature is not validated, so ensure that the token signature is validated before using this function
+// The JWT signature is not validated, so ensure that the token signature is valid before using this function
 func GetUserPrincipleNameFromToken(token string) (string, error) {
 	claims := jwt.MapClaims{}
 	parser := jwt.NewParser()
