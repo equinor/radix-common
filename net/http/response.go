@@ -202,6 +202,12 @@ func ReaderFileResponse(w http.ResponseWriter, reader io.Reader, fileName, conte
 	io.Copy(w, reader)
 }
 
+// ReaderResponse writes the content from the reader to the response,
+func ReaderResponse(w http.ResponseWriter, reader io.Reader, contentType string) {
+	w.Header().Set("Content-Type", contentType)
+	io.Copy(w, reader)
+}
+
 // ErrorResponse Marshals error for user requester
 func ErrorResponse(w http.ResponseWriter, r *http.Request, apiError error) {
 	errorResponseFor(User, w, r, apiError)
