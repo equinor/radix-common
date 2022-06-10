@@ -9,10 +9,15 @@ import (
 func Concat(errs []error) error {
 	var errstrings []string
 	for _, err := range errs {
-		errstrings = append(errstrings, err.Error())
+		if err != nil {
+			errstrings = append(errstrings, err.Error())
+		}
 	}
 
-	return fmt.Errorf(strings.Join(errstrings, "\n"))
+	if len(errstrings) > 0 {
+		return fmt.Errorf(strings.Join(errstrings, "\n"))
+	}
+	return nil
 }
 
 // Contains Check if error is contained in slice
