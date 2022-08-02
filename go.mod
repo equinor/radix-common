@@ -8,7 +8,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.8.0
-	k8s.io/apimachinery v0.23.4
+	k8s.io/apimachinery v0.23.9
 )
 
 require (
