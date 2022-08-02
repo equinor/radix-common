@@ -6,6 +6,9 @@ import (
 	"github.com/imdario/mergo"
 )
 
+var _ mergo.Transformers = BoolPtrTransformer{}
+var _ mergo.Transformers = CombinedTransformer{}
+
 type CombinedTransformer struct {
 	Transformers []mergo.Transformers
 }
