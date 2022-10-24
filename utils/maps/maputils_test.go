@@ -16,6 +16,24 @@ func Test_GetKeysFromMap(t *testing.T) {
 	assert.True(t, utils.ArrayEqualElements([]string{"a", "b", "c"}, GetKeysFromByteMap(a)))
 }
 
+func Test_GetKeysFromMapForStrings(t *testing.T) {
+	a := make(map[string]string)
+	a["a"] = "x"
+	a["b"] = "y"
+	a["c"] = "z"
+
+	assert.True(t, utils.ArrayEqualElements([]string{"a", "b", "c"}, GetKeysFromMap(a)))
+}
+
+func Test_GetKeysFromMapForBool(t *testing.T) {
+	a := make(map[string]bool)
+	a["a"] = true
+	a["b"] = false
+	a["c"] = false
+
+	assert.True(t, utils.ArrayEqualElements([]string{"a", "b", "c"}, GetKeysFromMap(a)))
+}
+
 func TestMergeStringMaps(t *testing.T) {
 	empty := make(map[string]string)
 	expect := map[string]string{
@@ -36,5 +54,28 @@ func TestMergeStringMaps(t *testing.T) {
 	assert.Equal(t, map2, result)
 
 	result = MergeStringMaps(nil, nil)
+	assert.Equal(t, empty, result)
+}
+
+func TestMergeMaps(t *testing.T) {
+	empty := make(map[string]string)
+	expect := map[string]string{
+		"a": "a", "x": "x", "b": "y",
+	}
+
+	map1 := map[string]string{"a": "a", "b": "c"}
+	map2 := map[string]string{"x": "x", "b": "y"}
+
+	result := MergeMaps(map1, map2)
+	assert.Equal(t, expect, result)
+	result = MergeMaps(map2, map1)
+	assert.NotEqual(t, expect, result)
+
+	result = MergeMaps(nil, map1)
+	assert.Equal(t, map1, result)
+	result = MergeMaps(map2, nil)
+	assert.Equal(t, map2, result)
+
+	result = MergeMaps[string, string](nil, nil)
 	assert.Equal(t, empty, result)
 }
