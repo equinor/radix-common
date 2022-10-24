@@ -11,8 +11,8 @@ func GetKeysFromStringMap(mapData map[string]string) []string {
 }
 
 //GetKeysFromMap Returns keys
-func GetKeysFromMap[T any](mapData map[string]T) []string {
-	var keys []string
+func GetKeysFromMap[T comparable, V any](mapData map[T]V) []T {
+	var keys []T
 	for k := range mapData {
 		k := k
 		keys = append(keys, k)
