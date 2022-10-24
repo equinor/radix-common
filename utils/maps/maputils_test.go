@@ -34,6 +34,15 @@ func Test_GetKeysFromMapForBool(t *testing.T) {
 	assert.True(t, utils.ArrayEqualElements([]string{"a", "b", "c"}, GetKeysFromMap(a)))
 }
 
+func Test_GetKeysFromMapForStruct(t *testing.T) {
+	a := make(map[int]struct{})
+	a[7] = struct{}{}
+	a[3] = struct{}{}
+	a[5] = struct{}{}
+
+	assert.ElementsMatch(t, []int{7, 3, 5}, GetKeysFromMap(a))
+}
+
 func TestMergeStringMaps(t *testing.T) {
 	empty := make(map[string]string)
 	expect := map[string]string{
