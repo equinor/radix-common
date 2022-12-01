@@ -67,24 +67,35 @@ func TestMergeStringMaps(t *testing.T) {
 }
 
 func TestMergeMaps(t *testing.T) {
-	empty := make(map[string]string)
-	expect := map[string]string{
-		"a": "a", "x": "x", "b": "y",
+
+	scenarios := []struct {
+		sources  []map[string]string
+		expected map[string]string
+	}{
+		{
+			sources:  []map[string]string{{"a": "a", "b": "c"}, {"x": "x", "X": "X", "b": "y"}, {"z": "z", "X": "Y"}},
+			expected: map[string]string{"a": "a", "x": "x", "b": "y", "X": "Y", "z": "z"},
+		},
+		{
+			sources:  []map[string]string{{"a": "a", "b": "c"}},
+			expected: map[string]string{"a": "a", "b": "c"},
+		},
+		{
+			sources:  []map[string]string{{"a": "a", "b": "c"}, nil},
+			expected: map[string]string{"a": "a", "b": "c"},
+		},
+		{
+			sources:  []map[string]string{nil},
+			expected: map[string]string{},
+		},
+		{
+			sources:  nil,
+			expected: map[string]string{},
+		},
 	}
 
-	map1 := map[string]string{"a": "a", "b": "c"}
-	map2 := map[string]string{"x": "x", "b": "y"}
-
-	result := MergeMaps(map1, map2)
-	assert.Equal(t, expect, result)
-	result = MergeMaps(map2, map1)
-	assert.NotEqual(t, expect, result)
-
-	result = MergeMaps(nil, map1)
-	assert.Equal(t, map1, result)
-	result = MergeMaps(map2, nil)
-	assert.Equal(t, map2, result)
-
-	result = MergeMaps[string, string](nil, nil)
-	assert.Equal(t, empty, result)
+	for _, scenario := range scenarios {
+		actual := MergeMaps(scenario.sources...)
+		assert.Equal(t, scenario.expected, actual)
+	}
 }
