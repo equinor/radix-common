@@ -31,7 +31,7 @@ func EqualStringsAsPtr(s1, s2 *string) bool {
 	return ((s1 == nil) == (s2 == nil)) && (s1 != nil && strings.EqualFold(*s1, *s2))
 }
 
-//EqualStringMaps Compare two string maps
+// EqualStringMaps Compare two string maps
 func EqualStringMaps(map1, map2 map[string]string) bool {
 	if len(map1) != len(map2) {
 		return false
@@ -45,7 +45,7 @@ func EqualStringMaps(map1, map2 map[string]string) bool {
 	return true
 }
 
-//EqualStringLists Compare two string lists
+// EqualStringLists Compare two string lists
 func EqualStringLists(list1, list2 []string) bool {
 	if len(list1) != len(list2) {
 		return false
@@ -62,7 +62,7 @@ func EqualStringLists(list1, list2 []string) bool {
 	return true
 }
 
-//ShortenString Get string without n-last chars
+// ShortenString Get string without n-last chars
 func ShortenString(s string, charsToCut int) string {
 	return s[:len(s)-charsToCut]
 }
@@ -109,9 +109,9 @@ func ArrayEqualElements(a, b []string) bool {
 	return true
 }
 
-//ToLowerCase Convert all strings in a list to lower case
+// ToLowerCase Convert all strings in a list to lower case
 func ToLowerCase(slice []string) []string {
-	lowerSlice := make([]string, len(slice), len(slice))
+	lowerSlice := make([]string, len(slice))
 
 	for i, s := range slice {
 		lowerSlice[i] = strings.ToLower(s)

@@ -20,23 +20,11 @@ func GetKeysFromMap[T comparable, V any](mapData map[T]V) []T {
 	return keys
 }
 
-// MergeStringMaps Merge two maps, preferring the right over the left. Deprecated - use MergeMaps
+// MergeStringMaps Merge two maps, preferring the right over the left.
+//
+// Deprecated: use MergeMaps
 func MergeStringMaps(left, right map[string]string) map[string]string {
-	result := make(map[string]string)
-
-	for key, rVal := range right {
-		rVal := rVal
-		result[key] = rVal
-	}
-
-	for key, lVal := range left {
-		lVal := lVal
-		if _, present := right[key]; !present {
-			result[key] = lVal
-		}
-	}
-
-	return result
+	return MergeMaps(left, right)
 }
 
 // MergeMaps combines given maps into one map.

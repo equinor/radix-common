@@ -22,8 +22,8 @@ func GetAccepts(header netHeader.Header) ([]AcceptSpec, error) {
 	commaRegex := regexp.MustCompile(",")
 	semicolonRegex := regexp.MustCompile(";")
 	assignRegex := regexp.MustCompile("=")
-	spaceBetweenCharsRegex := regexp.MustCompile(".\\s.")
-	qRegex := regexp.MustCompile("q=[\\d+]\\.[\\d]*")
+	spaceBetweenCharsRegex := regexp.MustCompile(`.\s.`)
+	qRegex := regexp.MustCompile(`q=[\d+]\.[\d]*`)
 
 	for _, accept := range headerAcceptItems {
 		acceptItems := commaRegex.Split(accept, -1)
