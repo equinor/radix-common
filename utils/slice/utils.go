@@ -13,3 +13,13 @@ func PointersOf(v interface{}) interface{} {
 	}
 	return out.Interface()
 }
+
+func Map[T, V any](source []T, mapper func(T) V) []V {
+	result := make([]V, len(source))
+
+	for i, v := range source {
+		result[i] = mapper(v)
+	}
+
+	return result
+}
