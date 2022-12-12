@@ -16,8 +16,8 @@ import (
 // Error Representation of errors in the API. These are divided into a small
 // number of categories, essentially distinguished by whose fault the
 // error is; i.e., is this error:
-//  - a transient problem with the service, so worth trying again?
-//  - not going to work until the user takes some other action, e.g., updating config?
+//   - a transient problem with the service, so worth trying again?
+//   - not going to work until the user takes some other action, e.g., updating config?
 type Error struct {
 	Type Type
 	// a message that can be printed out for the user
@@ -111,7 +111,7 @@ func ValidationError(kind, message string) error {
 	}
 }
 
-//NotFoundError No found error
+// NotFoundError No found error
 func NotFoundError(message string) error {
 	return &Error{
 		Type:    Missing,
@@ -146,23 +146,23 @@ func writeErrorWithCode(w http.ResponseWriter, r *http.Request, code int, err *E
 		case "application/json":
 			body, encodeErr := json.Marshal(err)
 			if encodeErr != nil {
-				w.Header().Set(http.CanonicalHeaderKey("Content-Type"), "text/plain; charset=utf-8")
+				w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 				w.WriteHeader(http.StatusInternalServerError)
 				fmt.Fprintf(w, "Error encoding error response: %s\n\nOriginal error: %s", encodeErr.Error(), err.Error())
 				return
 			}
-			w.Header().Set(http.CanonicalHeaderKey("Content-Type"), "application/json; charset=utf-8")
+			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(code)
 			w.Write(body)
 			return
 		case "text/plain":
-			w.Header().Set(http.CanonicalHeaderKey("Content-Type"), "text/plain; charset=utf-8")
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 			w.WriteHeader(code)
 			fmt.Fprint(w, err.Message)
 			return
 		}
 	}
-	w.Header().Set(http.CanonicalHeaderKey("Content-Type"), "text/plain; charset=utf-8")
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(code)
 	fmt.Fprint(w, err.Error())
 }
@@ -232,15 +232,13 @@ func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request
 
 	log.Error(outErr.Message)
 
-	switch apiError.(type) {
+	switch e := apiError.(type) {
 	case *url.Error:
 		// Reflect any underlying network error
 		writeErrorWithCode(w, r, http.StatusInternalServerError, outErr)
 
 	case *k8serrors.StatusError:
-		// Reflect any underlying error from Kubernetes API
-		se := apiError.(*k8serrors.StatusError)
-		writeErrorWithCode(w, r, int(se.ErrStatus.Code), outErr)
+		writeErrorWithCode(w, r, int(e.ErrStatus.Code), outErr)
 
 	default:
 		switch outErr.Type {
