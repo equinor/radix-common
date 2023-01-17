@@ -21,3 +21,19 @@ func Test_Map(t *testing.T) {
 	actual := Map([]int{1, 2, 3}, func(v int) string { return fmt.Sprintf("%d", v*10) })
 	assert.Equal(t, expected, actual)
 }
+
+func Test_Any(t *testing.T) {
+	type testType struct{ val int }
+	testData := []testType{{val: 1}, {val: 2}, {val: 3}}
+	assert.True(t, Any(testData, func(o testType) bool { return o.val == 2 }))
+	assert.False(t, Any(testData, func(o testType) bool { return o.val == 4 }))
+	assert.False(t, Any([]testType{}, func(o testType) bool { return o.val == 4 }))
+}
+
+func Test_All(t *testing.T) {
+	type testType struct{ val int }
+	testData := []testType{{val: 1}, {val: 2}, {val: 3}}
+	assert.True(t, All(testData, func(o testType) bool { return o.val > 0 }))
+	assert.False(t, All(testData, func(o testType) bool { return o.val > 1 }))
+	assert.True(t, All([]testType{}, func(o testType) bool { return o.val > 0 }))
+}
