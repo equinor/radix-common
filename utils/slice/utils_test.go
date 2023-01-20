@@ -2,6 +2,7 @@ package slice
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -36,4 +37,15 @@ func Test_All(t *testing.T) {
 	assert.True(t, All(testData, func(o testType) bool { return o.val > 0 }))
 	assert.False(t, All(testData, func(o testType) bool { return o.val > 1 }))
 	assert.True(t, All([]testType{}, func(o testType) bool { return o.val > 0 }))
+}
+
+func Test_FindAll(t *testing.T) {
+	type testType struct {
+		id   int
+		name string
+	}
+	testData := []testType{{id: 1, name: "foo"}, {id: 2, name: "bar"}, {id: 3, name: "baz"}, {id: 4, name: "foo2"}, {id: 5, name: "bar2"}}
+	expected := []testType{{id: 2, name: "bar"}, {id: 3, name: "baz"}, {id: 5, name: "bar2"}}
+	actual := FindAll(testData, func(v testType) bool { return strings.HasPrefix(v.name, "ba") })
+	assert.ElementsMatch(t, expected, actual)
 }
