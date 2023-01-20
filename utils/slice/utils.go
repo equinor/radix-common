@@ -39,3 +39,14 @@ func Any[T any](source []T, predicate func(T) bool) bool {
 func All[T any](source []T, predicate func(T) bool) bool {
 	return !Any(source, func(v T) bool { return !predicate(v) })
 }
+
+// Retrieves all the elements that match the conditions defined by the specified predicate.
+func FindAll[T any](source []T, predicate func(T) bool) []T {
+	var foundElements []T
+	for _, v := range source {
+		if predicate(v) {
+			foundElements = append(foundElements, v)
+		}
+	}
+	return foundElements
+}
