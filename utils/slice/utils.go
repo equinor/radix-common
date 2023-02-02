@@ -25,7 +25,7 @@ func Map[T, V any](source []T, mapper func(T) V) []V {
 	return result
 }
 
-// Applies an reducer function over a slice.
+// Applies an accumulator function over a slice.
 // The specified seed value is used as the initial accumulator value.
 func Reduce[TSource, TAccumulate any](source []TSource, seed TAccumulate, accumulator func(TAccumulate, TSource) TAccumulate) TAccumulate {
 	for _, v := range source {
