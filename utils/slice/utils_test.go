@@ -52,13 +52,13 @@ func Test_FindAll(t *testing.T) {
 
 func Test_Reduce(t *testing.T) {
 	t.Run("test 1", func(t *testing.T) {
-		type accumulate struct {
+		type accumulation struct {
 			lessThan5 int
 			equalGt5  int
 		}
 		testData := []int{1, 1, 2, 5, 6, 7, 7, 9, 4, 10, 12}
-		expected := accumulate{lessThan5: 4, equalGt5: 7}
-		actual := Reduce(testData, accumulate{}, func(agg accumulate, d int) accumulate {
+		expected := accumulation{lessThan5: 4, equalGt5: 7}
+		actual := Reduce(testData, accumulation{}, func(agg accumulation, d int) accumulation {
 			switch {
 			case d >= 5:
 				agg.equalGt5 += 1
