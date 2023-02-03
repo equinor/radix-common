@@ -25,6 +25,15 @@ func Map[T, V any](source []T, mapper func(T) V) []V {
 	return result
 }
 
+// Applies an accumulator function over a slice.
+// The specified seed value is used as the initial accumulator value.
+func Reduce[TSource, TAccumulation any](source []TSource, seed TAccumulation, accumulator func(TAccumulation, TSource) TAccumulation) TAccumulation {
+	for _, v := range source {
+		seed = accumulator(seed, v)
+	}
+	return seed
+}
+
 // Determines whether any element of a slice satisfies a condition.
 func Any[T any](source []T, predicate func(T) bool) bool {
 	for _, v := range source {

@@ -49,3 +49,33 @@ func Test_FindAll(t *testing.T) {
 	actual := FindAll(testData, func(v testType) bool { return strings.HasPrefix(v.name, "ba") })
 	assert.ElementsMatch(t, expected, actual)
 }
+
+func Test_Reduce(t *testing.T) {
+	t.Run("test 1", func(t *testing.T) {
+		type accumulation struct {
+			lessThan5 int
+			equalGt5  int
+		}
+		testData := []int{1, 1, 2, 5, 6, 7, 7, 9, 4, 10, 12}
+		expected := accumulation{lessThan5: 4, equalGt5: 7}
+		actual := Reduce(testData, accumulation{}, func(agg accumulation, d int) accumulation {
+			switch {
+			case d >= 5:
+				agg.equalGt5 += 1
+			default:
+				agg.lessThan5 += 1
+			}
+			return agg
+		})
+		assert.Equal(t, expected, actual)
+	})
+
+	t.Run("test 2", func(t *testing.T) {
+		testData := []string{"a", "a", "b", "c", "c", "c"}
+		actual := Reduce(testData, map[string]int{}, func(agg map[string]int, v string) map[string]int {
+			agg[v] += 1
+			return agg
+		})
+		assert.Equal(t, map[string]int{"a": 2, "b": 1, "c": 3}, actual)
+	})
+}
