@@ -59,3 +59,13 @@ func FindAll[T any](source []T, predicate func(T) bool) []T {
 	}
 	return foundElements
 }
+
+// Returns the index of the first element matching the predicate or -1 on fail
+func FindIndex[T any](source []T, predicate func(T) bool) int {
+	for i, v := range source {
+		if predicate(v) {
+			return i
+		}
+	}
+	return -1
+}
