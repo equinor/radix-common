@@ -235,14 +235,18 @@ func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request
 
 	err := errors.Cause(apiError)
 	if outErr, ok = err.(*Error); !ok {
-		outErr = CoverAllError(apiError, requesterType)
+		switch {
+		case errors.Is(apiError, context.DeadlineExceeded):
+			outErr = CoverAllError(apiError, Server)
+		default:
+			outErr = CoverAllError(apiError, requesterType)
+		}
 	}
 
 	switch e := apiError.(type) {
 	case *url.Error:
 		// Reflect any underlying network error
 		writeErrorWithCode(w, r, http.StatusInternalServerError, outErr)
-
 	case *k8serrors.StatusError:
 		writeErrorWithCode(w, r, int(e.ErrStatus.Code), outErr)
 
