@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -223,20 +224,29 @@ func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request
 	var code int
 	var ok bool
 
+	// Skip error response if the context is cancelled.
+	// This will typically happen when a HTTP request is cancelled by the caller.
+	if errors.Is(apiError, context.Canceled) {
+		log.Info(apiError) // Should we log it as info or debug?
+		return
+	}
+
 	log.Error(apiError)
 
 	err := errors.Cause(apiError)
 	if outErr, ok = err.(*Error); !ok {
-		outErr = CoverAllError(apiError, requesterType)
+		switch {
+		case errors.Is(apiError, context.DeadlineExceeded):
+			outErr = CoverAllError(apiError, Server)
+		default:
+			outErr = CoverAllError(apiError, requesterType)
+		}
 	}
-
-	log.Error(outErr.Message)
 
 	switch e := apiError.(type) {
 	case *url.Error:
 		// Reflect any underlying network error
 		writeErrorWithCode(w, r, http.StatusInternalServerError, outErr)
-
 	case *k8serrors.StatusError:
 		writeErrorWithCode(w, r, int(e.ErrStatus.Code), outErr)
 
