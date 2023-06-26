@@ -69,3 +69,16 @@ func FindIndex[T any](source []T, predicate func(T) bool) int {
 	}
 	return -1
 }
+
+// Returns the first element matching the predicate.
+// 'ok' is true if an element was found and false if not.
+func FindFirst[T any](source []T, predicate func(T) bool) (element T, ok bool) {
+	for _, v := range source {
+		if predicate(v) {
+			element = v
+			ok = true
+			return
+		}
+	}
+	return
+}

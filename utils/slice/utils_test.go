@@ -90,3 +90,38 @@ func Test_FindIndex(t *testing.T) {
 	assert.Equal(t, 2, FindIndex(testData, func(v testType) bool { return v.name == "baz" }))
 	assert.Equal(t, -1, FindIndex(testData, func(v testType) bool { return v.name == "oof" }))
 }
+
+func Test_FindFirst(t *testing.T) {
+	type testType struct {
+		id   int
+		name string
+	}
+
+	e1 := testType{id: 1, name: "bar"}
+	e2 := testType{id: 2, name: "foo"}
+	e3 := testType{id: 3, name: "bar"}
+
+	// Test with slice of structs
+	testData := []testType{e1, e2, e3}
+	found, ok := FindFirst(testData, func(v testType) bool { return v.name == "foo" })
+	assert.True(t, ok)
+	assert.Equal(t, e2, found)
+	found, ok = FindFirst(testData, func(v testType) bool { return v.name == "bar" })
+	assert.True(t, ok)
+	assert.Equal(t, e1, found)
+	found, ok = FindFirst(testData, func(v testType) bool { return v.name == "none" })
+	assert.False(t, ok)
+	assert.Equal(t, testType{}, found)
+
+	// Test with slice of struct pointers
+	testDataPtr := []*testType{&e1, &e2, &e3}
+	foundPtr, ok := FindFirst(testDataPtr, func(v *testType) bool { return v.name == "foo" })
+	assert.True(t, ok)
+	assert.Equal(t, &e2, foundPtr)
+	foundPtr, ok = FindFirst(testDataPtr, func(v *testType) bool { return v.name == "bar" })
+	assert.True(t, ok)
+	assert.Equal(t, &e1, foundPtr)
+	foundPtr, ok = FindFirst(testDataPtr, func(v *testType) bool { return v.name == "none" })
+	assert.False(t, ok)
+	assert.Nil(t, foundPtr)
+}
