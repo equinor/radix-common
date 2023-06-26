@@ -25,8 +25,8 @@ func GetBearerTokenFromHeader(r *http.Request) (string, error) {
 // GetImpersonationFromHeader Gets Impersonation from request header
 func GetImpersonationFromHeader(r *http.Request) (models.Impersonation, error) {
 	impersonateUser := r.Header.Get("Impersonate-User")
-	impersonateGroup := r.Header.Get("Impersonate-Group")
-	return models.NewImpersonation(impersonateUser, impersonateGroup)
+	impersonateGroups := strings.Split(r.Header.Get("Impersonate-Group"), ",")
+	return models.NewImpersonation(impersonateUser, impersonateGroups)
 }
 
 // GetTokenFromQuery Gets token from query of the request
