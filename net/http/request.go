@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/equinor/radix-common/models"
+	"github.com/equinor/radix-common/utils/slice"
 )
 
 // GetBearerTokenFromHeader gets bearer token from request header
@@ -25,7 +26,11 @@ func GetBearerTokenFromHeader(r *http.Request) (string, error) {
 // GetImpersonationFromHeader Gets Impersonation from request header
 func GetImpersonationFromHeader(r *http.Request) (models.Impersonation, error) {
 	impersonateUser := r.Header.Get("Impersonate-User")
-	impersonateGroups := strings.Split(r.Header.Get("Impersonate-Group"), ",")
+	var impersonateGroups []string
+	if impersonateGroupHeader := strings.TrimSpace(r.Header.Get("Impersonate-Group")); len(impersonateGroupHeader) > 0 {
+		impersonateGroups = slice.Map(strings.Split(impersonateGroupHeader, ","), func(group string) string { return strings.TrimSpace(group) })
+	}
+
 	return models.NewImpersonation(impersonateUser, impersonateGroups)
 }
 
