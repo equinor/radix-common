@@ -3,7 +3,7 @@ package mergo
 import (
 	"reflect"
 
-	"github.com/imdario/mergo"
+	"dario.cat/mergo"
 )
 
 var _ mergo.Transformers = BoolPtrTransformer{}

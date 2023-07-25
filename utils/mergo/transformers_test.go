@@ -3,7 +3,7 @@ package mergo
 import (
 	"testing"
 
-	"github.com/imdario/mergo"
+	"dario.cat/mergo"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
