@@ -9,3 +9,7 @@
     git tag v1.0.0
     git push origin v1.0.0
     ```
+
+  Want to contribute? Read our [contributing guideline](./contributing.md)
+
+  [How to handle security issues](./security.md)
