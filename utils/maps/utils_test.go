@@ -1,6 +1,7 @@
 package maps
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/equinor/radix-common/utils"
@@ -97,5 +98,45 @@ func TestMergeMaps(t *testing.T) {
 	for _, scenario := range scenarios {
 		actual := MergeMaps(scenario.sources...)
 		assert.Equal(t, scenario.expected, actual)
+	}
+}
+
+func Test_ConvertToMap(t *testing.T) {
+	scenarios := []struct {
+		source   string
+		expected map[string]string
+	}{
+		{source: "a=b,c=d", expected: map[string]string{"a": "b", "c": "d"}},
+		{source: "a=b ,c=d, e=f ,  p=k", expected: map[string]string{"a": "b", "c": "d", "e": "f", "p": "k"}},
+		{source: "a=b,c=,=f,=,a", expected: map[string]string{"a": "b"}},
+		{source: "a=b,,==,=f=,-", expected: map[string]string{"a": "b"}},
+		{source: "", expected: map[string]string{}},
+	}
+	for i, scenario := range scenarios {
+		t.Run(fmt.Sprintf("test %d", i+1), func(t *testing.T) {
+			actual := FromString(scenario.source)
+			assert.Equal(t, scenario.expected, actual)
+		})
+	}
+}
+
+func Test_ConvertToString(t *testing.T) {
+	scenarios := []struct {
+		source   map[string]string
+		expected string
+	}{
+		{source: map[string]string{"a": "b", "c": "d"}, expected: "a=b,c=d"},
+		{source: map[string]string{"a": "b  "}, expected: "a=b"},
+		{source: map[string]string{"a ": "b  "}, expected: "a=b"},
+		{source: map[string]string{" a": " b  "}, expected: "a=b"},
+		{source: map[string]string{"": "b  ", "c": "d"}, expected: "c=d"},
+		{source: map[string]string{"": "b  ", "  ": "d"}, expected: ""},
+		{source: map[string]string{}, expected: ""},
+	}
+	for i, scenario := range scenarios {
+		t.Run(fmt.Sprintf("test %d", i+1), func(t *testing.T) {
+			actual := ToString(scenario.source)
+			assert.Equal(t, scenario.expected, actual)
+		})
 	}
 }
