@@ -1,7 +1,7 @@
 package docker
 
-// AuthSpec represent the secret of type docker-config
-type AuthSpec struct {
+// AuthConfig represent the secret of type kubernetes.io/dockerconfigjson
+type AuthConfig struct {
 	Auths Auths `json:"auths"`
 }
 
