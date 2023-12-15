@@ -4,7 +4,7 @@ test:
 
 .PHONY: lint
 lint: bootstrap
-	golangci-lint run --max-same-issues 0
+	golangci-lint run --max-same-issues 0 --new
 
 HAS_GOLANGCI_LINT := $(shell command -v golangci-lint;)
 

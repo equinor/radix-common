@@ -154,7 +154,7 @@ func writeErrorWithCode(w http.ResponseWriter, r *http.Request, code int, err *E
 			}
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(code)
-			_, _ = w.Write(body)
+			w.Write(body)
 			return
 		case "text/plain":
 			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
@@ -172,14 +172,14 @@ func writeErrorWithCode(w http.ResponseWriter, r *http.Request, code int, err *E
 func StringResponse(w http.ResponseWriter, r *http.Request, result string) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write([]byte(result))
+	w.Write([]byte(result))
 }
 
 // ByteArrayResponse Used for response data. I.e. image
 func ByteArrayResponse(w http.ResponseWriter, r *http.Request, contentType string, result []byte) {
 	w.Header().Set("Content-Type", contentType)
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(result)
+	w.Write(result)
 }
 
 // JSONResponse Marshals response with header
@@ -192,7 +192,7 @@ func JSONResponse(w http.ResponseWriter, r *http.Request, result interface{}) {
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	_, _ = w.Write(body)
+	w.Write(body)
 }
 
 // ReaderFileResponse writes the content from the reader to the response,
@@ -200,13 +200,13 @@ func JSONResponse(w http.ResponseWriter, r *http.Request, result interface{}) {
 func ReaderFileResponse(w http.ResponseWriter, reader io.Reader, fileName, contentType string) {
 	w.Header().Set("Content-Disposition", "attachment; filename="+fileName)
 	w.Header().Set("Content-Type", contentType)
-	_, _ = io.Copy(w, reader)
+	io.Copy(w, reader)
 }
 
 // ReaderResponse writes the content from the reader to the response,
 func ReaderResponse(w http.ResponseWriter, reader io.Reader, contentType string) {
 	w.Header().Set("Content-Type", contentType)
-	_, _ = io.Copy(w, reader)
+	io.Copy(w, reader)
 }
 
 // ErrorResponse Marshals error for user requester
