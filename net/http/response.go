@@ -138,7 +138,7 @@ func CoverAllError(err error, requesterType Type) *Error {
 	}
 }
 
-func writeErrorWithCode(w http.ResponseWriter, r *http.Request, code int, err *Error) {
+func writeErrorWithCode(w http.ResponseWriter, r *http.Request, code int, err *Error) error {
 	// An Accept header with "application/json" is sent by clients
 	// understanding how to decode JSON errors. Older clients don't
 	// send an Accept header, so we just give them the error text.
@@ -150,76 +150,81 @@ func writeErrorWithCode(w http.ResponseWriter, r *http.Request, code int, err *E
 				w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 				w.WriteHeader(http.StatusInternalServerError)
 				fmt.Fprintf(w, "Error encoding error response: %s\n\nOriginal error: %s", encodeErr.Error(), err.Error())
-				return
+				return encodeErr
 			}
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			w.WriteHeader(code)
-			w.Write(body)
-			return
+			_, err := w.Write(body)
+			return err
 		case "text/plain":
 			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 			w.WriteHeader(code)
 			fmt.Fprint(w, err.Message)
-			return
+			return nil
 		}
 	}
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(code)
 	fmt.Fprint(w, err.Error())
+	return nil
 }
 
 // StringResponse Used for textual response data. I.e. log data
-func StringResponse(w http.ResponseWriter, r *http.Request, result string) {
+func StringResponse(w http.ResponseWriter, r *http.Request, result string) error {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(result))
+	_, err := w.Write([]byte(result))
+	return err
 }
 
 // ByteArrayResponse Used for response data. I.e. image
-func ByteArrayResponse(w http.ResponseWriter, r *http.Request, contentType string, result []byte) {
+func ByteArrayResponse(w http.ResponseWriter, r *http.Request, contentType string, result []byte) error {
 	w.Header().Set("Content-Type", contentType)
 	w.WriteHeader(http.StatusOK)
-	w.Write(result)
+	_, err := w.Write(result)
+	return err
 }
 
 // JSONResponse Marshals response with header
-func JSONResponse(w http.ResponseWriter, r *http.Request, result interface{}) {
+func JSONResponse(w http.ResponseWriter, r *http.Request, result interface{}) error {
 	body, err := json.Marshal(result)
 	if err != nil {
-		ErrorResponse(w, r, err)
-		return
+		return ErrorResponse(w, r, err)
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	w.Write(body)
+	_, err = w.Write(body)
+	return err
 }
 
 // ReaderFileResponse writes the content from the reader to the response,
 // and sets Content-Disposition=attachment; filename=<filename arg>
-func ReaderFileResponse(w http.ResponseWriter, reader io.Reader, fileName, contentType string) {
+func ReaderFileResponse(w http.ResponseWriter, reader io.Reader, fileName, contentType string) error {
 	w.Header().Set("Content-Disposition", "attachment; filename="+fileName)
 	w.Header().Set("Content-Type", contentType)
-	io.Copy(w, reader)
+	_, err := io.Copy(w, reader)
+	return err
 }
 
 // ReaderResponse writes the content from the reader to the response,
-func ReaderResponse(w http.ResponseWriter, reader io.Reader, contentType string) {
+func ReaderResponse(w http.ResponseWriter, reader io.Reader, contentType string) error {
 	w.Header().Set("Content-Type", contentType)
-	io.Copy(w, reader)
+	_, err := io.Copy(w, reader)
+	return err
 }
 
 // ErrorResponse Marshals error for user requester
-func ErrorResponse(w http.ResponseWriter, r *http.Request, apiError error) {
-	errorResponseFor(User, w, r, apiError)
+func ErrorResponse(w http.ResponseWriter, r *http.Request, apiError error) error {
+	return errorResponseFor(User, w, r, apiError)
 }
 
 // ErrorResponseForServer Marshals error for server requester
-func ErrorResponseForServer(w http.ResponseWriter, r *http.Request, apiError error) {
-	errorResponseFor(Server, w, r, apiError)
+func ErrorResponseForServer(w http.ResponseWriter, r *http.Request, apiError error) error {
+	return errorResponseFor(Server, w, r, apiError)
 }
 
-func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request, apiError error) {
+func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request, apiError error) error {
 	var outErr *Error
 	var code int
 	var ok bool
@@ -228,7 +233,7 @@ func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request
 	// This will typically happen when a HTTP request is cancelled by the caller.
 	if errors.Is(apiError, context.Canceled) {
 		log.Info(apiError) // Should we log it as info or debug?
-		return
+		return nil
 	}
 
 	log.Error(apiError)
@@ -246,9 +251,9 @@ func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request
 	switch e := apiError.(type) {
 	case *url.Error:
 		// Reflect any underlying network error
-		writeErrorWithCode(w, r, http.StatusInternalServerError, outErr)
+		return writeErrorWithCode(w, r, http.StatusInternalServerError, outErr)
 	case *k8serrors.StatusError:
-		writeErrorWithCode(w, r, int(e.ErrStatus.Code), outErr)
+		return writeErrorWithCode(w, r, int(e.ErrStatus.Code), outErr)
 
 	default:
 		switch outErr.Type {
@@ -261,8 +266,7 @@ func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request
 		default:
 			code = http.StatusInternalServerError
 		}
-		writeErrorWithCode(w, r, code, outErr)
-
+		return writeErrorWithCode(w, r, code, outErr)
 	}
 }
 
