@@ -1,10 +1,12 @@
 package net
 
 import (
-	"github.com/equinor/radix-common/models"
-	httpUtils "github.com/equinor/radix-common/net/http"
 	"net/http"
 	"time"
+
+	"github.com/equinor/radix-common/models"
+	httpUtils "github.com/equinor/radix-common/net/http"
+	"github.com/rs/zerolog"
 )
 
 // RadixMiddleware The middleware between router and radix handler functions
@@ -29,7 +31,7 @@ func NewRadixMiddleware(path, method string, next models.RadixHandlerFunc, handl
 // Handle Wraps radix handler methods
 func (handler *RadixMiddleware) Handle(w http.ResponseWriter, r *http.Request) {
 	startTime := time.Now()
-
+	logger := zerolog.Ctx(r.Context())
 	w.Header().Add("Access-Control-Allow-Origin", "*")
 
 	defer func() {
@@ -40,14 +42,16 @@ func (handler *RadixMiddleware) Handle(w http.ResponseWriter, r *http.Request) {
 
 	token, err := httpUtils.GetBearerTokenFromHeader(r)
 	if err != nil {
-		httpUtils.ErrorResponse(w, r, err)
-		return
+		if err := httpUtils.ErrorResponse(w, r, err); err != nil {
+			logger.Error().Err(err).Msg("unable to write auth error response")
+		}
 	}
 
 	impersonation, err := httpUtils.GetImpersonationFromHeader(r)
 	if err != nil {
-		httpUtils.ErrorResponse(w, r, httpUtils.UnexpectedError("Problems impersonating", err))
-		return
+		if err := httpUtils.ErrorResponse(w, r, httpUtils.UnexpectedError("Problems impersonating", err)); err != nil {
+			logger.Error().Err(err).Msg("unable to write impersonating error response")
+		}
 	}
 
 	accounts := models.NewAccounts(
