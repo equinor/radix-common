@@ -7,12 +7,18 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"sort"
+	"strings"
 
+	"github.com/elnormous/contenttype"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 )
+
+var supportedMediaTypes []contenttype.MediaType = []contenttype.MediaType{
+	contenttype.NewMediaType("application/json"),
+	contenttype.NewMediaType("text/plain"),
+}
 
 // Error Representation of errors in the API. These are divided into a small
 // number of categories, essentially distinguished by whose fault the
@@ -138,37 +144,6 @@ func CoverAllError(err error, requesterType Type) *Error {
 	}
 }
 
-func writeErrorWithCode(w http.ResponseWriter, r *http.Request, code int, err *Error) error {
-	// An Accept header with "application/json" is sent by clients
-	// understanding how to decode JSON errors. Older clients don't
-	// send an Accept header, so we just give them the error text.
-	if len(r.Header.Get("Accept")) > 0 {
-		switch NegotiateContentType(r, []string{"application/json", "text/plain"}) {
-		case "application/json":
-			body, encodeErr := json.Marshal(err)
-			if encodeErr != nil {
-				w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-				w.WriteHeader(http.StatusInternalServerError)
-				fmt.Fprintf(w, "Error encoding error response: %s\n\nOriginal error: %s", encodeErr.Error(), err.Error())
-				return encodeErr
-			}
-			w.Header().Set("Content-Type", "application/json; charset=utf-8")
-			w.WriteHeader(code)
-			_, err := w.Write(body)
-			return err
-		case "text/plain":
-			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-			w.WriteHeader(code)
-			fmt.Fprint(w, err.Message)
-			return nil
-		}
-	}
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.WriteHeader(code)
-	fmt.Fprint(w, err.Error())
-	return nil
-}
-
 // StringResponse Used for textual response data. I.e. log data
 func StringResponse(w http.ResponseWriter, r *http.Request, result string) error {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
@@ -270,30 +245,50 @@ func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request
 	}
 }
 
-// NegotiateContentType picks a content type based on the Accept
-// header from a request, and a supplied list of available content
-// types in order of preference. If the Accept header mentions more
-// than one available content type, the one with the highest quality
-// (`q`) parameter is chosen; if there are a number of those, the one
-// that appears first in the available types is chosen.
-func NegotiateContentType(r *http.Request, orderedPref []string) string {
-	specs, err := GetAccepts(r.Header)
-	if err != nil {
-		log.Errorf("error getting header Accept: %v", err)
-	}
-	if len(specs) == 0 {
-		return orderedPref[0]
-	}
-
-	var preferred []AcceptSpec
-	for _, spec := range specs {
-		if indexOf(orderedPref, spec.Value) < len(orderedPref) {
-			preferred = append(preferred, spec)
+func writeErrorWithCode(w http.ResponseWriter, r *http.Request, code int, apiError *Error) error {
+	// An Accept header with "application/json" is sent by clients
+	// understanding how to decode JSON errors. Older clients don't
+	// send an Accept header, so we just give them the error text.
+	if len(r.Header.Get("Accept")) > 0 {
+		contentType, _, err := contenttype.GetAcceptableMediaType(r, supportedMediaTypes)
+		if errors.Is(err, contenttype.ErrNoAcceptableTypeFound) {
+			w.WriteHeader(http.StatusNotAcceptable)
+			return nil
+		}
+		switch contentType.MIME() {
+		case "application/json":
+			return writeErrorJSON(w, code, apiError)
+		case "text/plain":
+			return writeErrorTextPlain(w, code, apiError)
 		}
 	}
-	if len(preferred) > 0 {
-		sort.Sort(sortAccept{preferred, orderedPref})
-		return preferred[0].Value
+	return writeErrorTextPlain(w, code, apiError)
+}
+
+func writeErrorTextPlain(w http.ResponseWriter, code int, apiError *Error) error {
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.WriteHeader(code)
+
+	if apiError.Err != nil {
+		fmt.Fprintln(w, apiError.Err.Error())
 	}
-	return ""
+
+	if len(strings.TrimSpace(apiError.Message)) > 0 {
+		fmt.Fprintln(w, apiError.Message)
+	}
+
+	return nil
+}
+
+func writeErrorJSON(w http.ResponseWriter, code int, apiError *Error) error {
+	body, encodeErr := json.Marshal(apiError)
+	if encodeErr != nil {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.WriteHeader(http.StatusInternalServerError)
+		return encodeErr
+	}
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.WriteHeader(code)
+	_, err := w.Write(body)
+	return err
 }
