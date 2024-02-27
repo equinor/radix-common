@@ -11,7 +11,6 @@ import (
 
 	"github.com/elnormous/contenttype"
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 )
 
@@ -207,11 +206,8 @@ func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request
 	// Skip error response if the context is cancelled.
 	// This will typically happen when a HTTP request is cancelled by the caller.
 	if errors.Is(apiError, context.Canceled) {
-		log.Info(apiError) // Should we log it as info or debug?
 		return nil
 	}
-
-	log.Error(apiError)
 
 	err := errors.Cause(apiError)
 	if outErr, ok = err.(*Error); !ok {
