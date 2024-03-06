@@ -22,7 +22,6 @@ func (l Logger) LogMode(logger.LogLevel) logger.Interface {
 }
 
 func (l Logger) Error(ctx context.Context, msg string, opts ...interface{}) {
-
 	zerolog.Ctx(ctx).Error().Msgf(msg, opts...)
 }
 
