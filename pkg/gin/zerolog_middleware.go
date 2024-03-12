@@ -61,7 +61,7 @@ func ZerologRequestLogger() gin.HandlerFunc {
 			Str("query", c.Request.URL.RawQuery).
 			Int("status", c.Writer.Status()).
 			Int("body_size", c.Writer.Size()).
-			Dur("elapsed_ms", elapsed).
+			Int64("elapsed_ms", elapsed.Milliseconds()).
 			Str("user_agent", c.Request.UserAgent()).
 			Msg(msg)
 	}
