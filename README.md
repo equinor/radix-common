@@ -1,4 +1,4 @@
-[![SCM Compliance](https://scm-compliance-api.radix.equinor.com/repos/equinor/8de2870b-4681-4c54-8f5e-2cb7a85f3201/badge)](https://developer.equinor.com/governance/scm-policy/)  
+[![SCM Compliance](https://scm-compliance-api.radix.equinor.com/repos/equinor/radix-common/badge)](https://developer.equinor.com/governance/scm-policy/)  
 
 # Radix common types and utils
 
