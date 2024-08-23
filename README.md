@@ -1,3 +1,5 @@
+[![SCM Compliance](https://scm-compliance-api.radix.equinor.com/repos/equinor/radix-common/badge)](https://developer.equinor.com/governance/scm-policy/)  
+
 # Radix common types and utils
 
 [Radix](https://www.radix.equinor.com) is a PaaS. This document is for Radix developers, or anyone interested in poking around..
