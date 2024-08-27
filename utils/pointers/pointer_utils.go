@@ -4,3 +4,12 @@ package pointers
 func Ptr[T any](i T) *T {
 	return &i
 }
+
+func Val[T any](i *T) T {
+	var value T
+	if i != nil {
+		value = *i
+	}
+
+	return value
+}
