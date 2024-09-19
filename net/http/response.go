@@ -52,6 +52,8 @@ const (
 	// can't happen at present (e.g., because you've not supplied some
 	// config yet)
 	User = "user"
+	// Forbidden The operation is not allowed for the current authenticated user
+	Forbidden = "forbidden"
 )
 
 // MarshalJSON Writes error as json
@@ -113,6 +115,14 @@ func ValidationError(kind, message string) error {
 	return &Error{
 		Type:    User,
 		Err:     fmt.Errorf("%s failed validation", kind),
+		Message: message,
+	}
+}
+
+// ForbiddenError forbidden error
+func ForbiddenError(message string) error {
+	return &Error{
+		Type:    Forbidden,
 		Message: message,
 	}
 }
@@ -234,6 +244,8 @@ func errorResponseFor(requesterType Type, w http.ResponseWriter, r *http.Request
 			code = http.StatusBadRequest
 		case Server:
 			code = http.StatusInternalServerError
+		case Forbidden:
+			code = http.StatusForbidden
 		default:
 			code = http.StatusInternalServerError
 		}
