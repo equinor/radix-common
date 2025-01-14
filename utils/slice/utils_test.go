@@ -23,6 +23,20 @@ func Test_Map(t *testing.T) {
 	assert.Equal(t, expected, actual)
 }
 
+func Test_MapMapy(t *testing.T) {
+	type s struct {
+		items []string
+	}
+	testData := []s{
+		{items: []string{"a", "b", "c"}},
+		{items: []string{"b", "c", "d", "e"}},
+		{items: []string{"f"}},
+	}
+	expected := []string{"a", "b", "c", "b", "c", "d", "e", "f"}
+	actual := MapMany(testData, func(v s) []string { return v.items })
+	assert.Equal(t, expected, actual)
+}
+
 func Test_Reduce(t *testing.T) {
 	t.Run("test 1", func(t *testing.T) {
 		type accumulation struct {

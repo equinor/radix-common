@@ -25,6 +25,18 @@ func Map[T, V any](source []T, mapper func(T) V) []V {
 	return result
 }
 
+// Projects each elements of a slice to mapper function and builds a flattend slice from the slices returned by mapper.
+func MapMany[SIn ~[]EIn, EIn any, SOut ~[]EOut, EOut any](source SIn, mapper func(EIn) SOut) []EOut {
+	var result []EOut
+
+	for _, sourceVal := range source {
+		mappedVal := mapper(sourceVal)
+		result = append(result, mappedVal...)
+	}
+
+	return result
+}
+
 // Applies an accumulator function over a slice.
 // The specified seed value is used as the initial accumulator value.
 func Reduce[TSource, TAccumulation any](source []TSource, seed TAccumulation, accumulator func(TAccumulation, TSource) TAccumulation) TAccumulation {
