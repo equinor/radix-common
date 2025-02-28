@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"dario.cat/mergo"
+	"k8s.io/apimachinery/pkg/api/resource"
 )
 
 var _ mergo.Transformers = BoolPtrTransformer{}
@@ -29,6 +30,24 @@ func (t BoolPtrTransformer) Transformer(typ reflect.Type) func(dst, src reflect.
 		return func(dst, src reflect.Value) error {
 			if !src.IsNil() && dst.CanSet() {
 				dst.Set(src)
+			}
+			return nil
+		}
+	}
+	return nil
+}
+
+type ResourceQuantityTransformer struct {
+}
+
+func (t ResourceQuantityTransformer) Transformer(typ reflect.Type) func(dst, src reflect.Value) error {
+	if typ == reflect.TypeOf(resource.Quantity{}) {
+		return func(dst, src reflect.Value) error {
+			if dst.CanSet() {
+				srcVal := (src.Interface()).(resource.Quantity)
+				if !srcVal.IsZero() {
+					dst.Set(src)
+				}
 			}
 			return nil
 		}
