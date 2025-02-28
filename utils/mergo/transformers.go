@@ -38,7 +38,7 @@ func (t BoolPtrTransformer) Transformer(typ reflect.Type) func(dst, src reflect.
 	return nil
 }
 
-// ResourceQuantityTransformeris is a dario.cat/mergo Transformers implementation that handles merging of k8s.io/apimachinery/pkg/api/resource Quantity types
+// ResourceQuantityTransformer is a dario.cat/mergo Transformers implementation that handles merging of k8s.io/apimachinery/pkg/api/resource Quantity types
 type ResourceQuantityTransformer struct {
 }
 
