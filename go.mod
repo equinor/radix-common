@@ -8,7 +8,7 @@ require (
 	dario.cat/mergo v1.0.0
 	github.com/elnormous/contenttype v1.0.4
 	github.com/gin-gonic/gin v1.10.0
-	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/pkg/errors v0.9.1
 	github.com/rs/xid v1.5.0
 	github.com/rs/zerolog v1.33.0
