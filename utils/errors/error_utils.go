@@ -1,24 +1,13 @@
 package errors
 
 import (
-	"fmt"
-	"strings"
+	"errors"
 )
 
 // Deprecated: Use errors.Join(errs) from golang standard library
 // Concat Creates a single error from a list of errors
 func Concat(errs []error) error {
-	var errstrings []string
-	for _, err := range errs {
-		if err != nil {
-			errstrings = append(errstrings, err.Error())
-		}
-	}
-
-	if len(errstrings) > 0 {
-		return fmt.Errorf(strings.Join(errstrings, "\n"))
-	}
-	return nil
+	return errors.Join(errs...)
 }
 
 // Deprecated: Use errors.Join() and error.Is() instead
