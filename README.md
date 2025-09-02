@@ -28,7 +28,7 @@ Merging a pull request into `main` triggers the **Prepare release pull request**
 This workflow analyzes the commit messages to determine whether the version number should be bumped — and if so, whether it's a major, minor, or patch change.  
 
 It then creates a pull request for releasing a new stable version (e.g. `1.2.3`):
-Merging this requests triggers the **Create releases and tags** workflow, which reads the version stored in `version.txt`, creates a GitHub release, and tags it accordingly.
+Merging this request triggers the **Create releases and tags** workflow, which reads the version stored in `version.txt`, creates a GitHub release, and tags it accordingly.
 
 ## Contributing
 
