@@ -278,11 +278,11 @@ func writeErrorTextPlain(w http.ResponseWriter, code int, apiError *Error) error
 	w.WriteHeader(code)
 
 	if apiError.Err != nil {
-		fmt.Fprintln(w, apiError.Err.Error())
+		_, _ = fmt.Fprintln(w, apiError.Err.Error())
 	}
 
 	if len(strings.TrimSpace(apiError.Message)) > 0 {
-		fmt.Fprintln(w, apiError.Message)
+		_, _ = fmt.Fprintln(w, apiError.Message)
 	}
 
 	return nil
