@@ -14,6 +14,9 @@ All notable changes to this project will be documented in this file.
 - Refactor release process (#51) - ([fc88861](https://github.com/equinor/radix-common/commit/fc88861a6aedb5ad1c41166ba590df9e2a99db20)) by @nilsgstrabo in [#51](https://github.com/equinor/radix-common/pull/51)
 
 
+## New Contributors ❤️
+
+* @github-actions[bot] made their first contribution in [#54](https://github.com/equinor/radix-common/pull/54)
 ## [1.11.0](https://github.com/equinor/radix-common/compare/v1.10.0..v1.11.0) - 2025-06-11
 
 ### ⚙️ Miscellaneous Tasks
