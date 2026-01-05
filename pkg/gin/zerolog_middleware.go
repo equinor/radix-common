@@ -46,11 +46,11 @@ func ZerologRequestLogger() gin.HandlerFunc {
 		var ev *zerolog.Event
 		switch {
 		case c.Writer.Status() >= 400 && c.Writer.Status() <= 499:
-			ev = logger.Warn()
+			ev = logger.Warn() //nolint:zerologlint
 		case c.Writer.Status() >= 500:
-			ev = logger.Error()
+			ev = logger.Error() //nolint:zerologlint
 		default:
-			ev = logger.Info()
+			ev = logger.Info() //nolint:zerologlint
 		}
 
 		ev.

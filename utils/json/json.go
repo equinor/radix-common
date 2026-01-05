@@ -29,7 +29,9 @@ func Save(path string, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() {
+		_ = f.Close()
+	}()
 	r, err := Marshal(v)
 	if err != nil {
 		return err
@@ -45,7 +47,9 @@ func Load(path string, v interface{}) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() {
+		_ = f.Close()
+	}()
 	return Unmarshal(f, v)
 }
 
