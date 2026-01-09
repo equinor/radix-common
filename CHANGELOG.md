@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.1](https://github.com/equinor/radix-common/compare/v1.12.0..v1.12.1) - 2026-01-09
+
+### 🐛 Bug Fixes
+
+- *(deps)* Bump github.com/quic-go/quic-go (#53) - ([d60fecc](https://github.com/equinor/radix-common/commit/d60fecc5b1f450df7e846d931a96648a3454b62a)) by @dependabot[bot] in [#53](https://github.com/equinor/radix-common/pull/53)
+
+
 ## [1.12.0](https://github.com/equinor/radix-common/compare/v1.11.0..v1.12.0) - 2026-01-05
 
 ### 🚀 Features
@@ -14,6 +21,9 @@ All notable changes to this project will be documented in this file.
 - Refactor release process (#51) - ([fc88861](https://github.com/equinor/radix-common/commit/fc88861a6aedb5ad1c41166ba590df9e2a99db20)) by @nilsgstrabo in [#51](https://github.com/equinor/radix-common/pull/51)
 
 
+## New Contributors ❤️
+
+* @github-actions[bot] made their first contribution in [#54](https://github.com/equinor/radix-common/pull/54)
 ## [1.11.0](https://github.com/equinor/radix-common/compare/v1.10.0..v1.11.0) - 2025-06-11
 
 ### ⚙️ Miscellaneous Tasks
