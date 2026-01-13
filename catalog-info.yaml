@@ -10,4 +10,4 @@ spec:
   type: other
   lifecycle: production
   owner: omnia-radix
-  System: Radix
+  system: Radix
