@@ -1,0 +1,13 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: radix-common
+  title: Radix common
+  description: "Common logic for Radix system applications"
+  annotations:
+    github.com/project-slug: equinor/radix-common
+spec:
+  type: other
+  lifecycle: production
+  owner: omnia-radix
+  System: Radix
