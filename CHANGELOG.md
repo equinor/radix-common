@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.2](https://github.com/equinor/radix-common/compare/v1.12.1..v1.12.2) - 2026-02-16
+
+### 🐛 Bug Fixes
+
+- *(deps)* Update Go version to 1.25.7 (#63) - ([f7deb57](https://github.com/equinor/radix-common/commit/f7deb572b9f05230181a58a04f021bf737e626e0)) by @nilsgstrabo in [#63](https://github.com/equinor/radix-common/pull/63)
+
+
+### 📚 Documentation
+
+- *(readme)* Add summary and toc (#62) - ([101b485](https://github.com/equinor/radix-common/commit/101b485920821044b0fb892726dd59861586f3ed)) by @jonaspetersorensen in [#62](https://github.com/equinor/radix-common/pull/62)
+
+- Update catalog-info.yaml (#60) - ([c9c48cb](https://github.com/equinor/radix-common/commit/c9c48cb936437a7a16c9bce32f741d0d72274b16)) by @emirgens in [#60](https://github.com/equinor/radix-common/pull/60)
+
+- Update catalog-info.yaml (#61) - ([9116c87](https://github.com/equinor/radix-common/commit/9116c87d95e20963e62e342a6d2fa1451e5a1919)) by @emirgens in [#61](https://github.com/equinor/radix-common/pull/61)
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Add catalog-info.yaml config file (#57) - ([31e9d72](https://github.com/equinor/radix-common/commit/31e9d729b62139da76132fe4c1ca33825d455619)) by @emirgens in [#57](https://github.com/equinor/radix-common/pull/57)
+
+
+## New Contributors ❤️
+
+* @jonaspetersorensen made their first contribution in [#62](https://github.com/equinor/radix-common/pull/62)
 ## [1.12.1](https://github.com/equinor/radix-common/compare/v1.12.0..v1.12.1) - 2026-01-09
 
 ### 🐛 Bug Fixes
