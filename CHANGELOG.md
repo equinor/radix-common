@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.3](https://github.com/equinor/radix-common/compare/v1.12.2..v1.12.3) - 2026-04-10
+
+### 🐛 Bug Fixes
+
+- Update dependencies (#66) - ([071a3c1](https://github.com/equinor/radix-common/commit/071a3c198291f04495b6862b25710620ef83a486)) by @Richard87 in [#66](https://github.com/equinor/radix-common/pull/66)
+
+
+### ⚙️ Miscellaneous Tasks
+
+- *(ci)* Update github workflows to latest version and pin to sha - ([922ebe7](https://github.com/equinor/radix-common/commit/922ebe7b5143ddf3737144a4992b3ccd02fdfac3)) by @sveinpj in [#65](https://github.com/equinor/radix-common/pull/65)
+
+
+## New Contributors ❤️
+
+* @sveinpj made their first contribution in [#65](https://github.com/equinor/radix-common/pull/65)
 ## [1.12.2](https://github.com/equinor/radix-common/compare/v1.12.1..v1.12.2) - 2026-02-16
 
 ### 🐛 Bug Fixes
