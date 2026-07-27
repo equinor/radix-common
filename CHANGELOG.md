@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.12.4](https://github.com/equinor/radix-common/compare/v1.12.3..v1.12.4) - 2026-07-27
+
+### 🐛 Bug Fixes
+
+- *(deps)* Update GitHub Actions and golang dependencies (#70) - ([b55ea05](https://github.com/equinor/radix-common/commit/b55ea0556879fd5092b904b2111371ba48b0898b)) by @nilsgstrabo in [#70](https://github.com/equinor/radix-common/pull/70)
+
+
+### ⚙️ Miscellaneous Tasks
+
+- Add skill-creator skill from radix-internal (#68) - ([2809f15](https://github.com/equinor/radix-common/commit/2809f159ae1f46f3fb487c3c069aacf059d27665)) by @emirgens in [#68](https://github.com/equinor/radix-common/pull/68)
+
+
 ## [1.12.3](https://github.com/equinor/radix-common/compare/v1.12.2..v1.12.3) - 2026-04-10
 
 ### 🐛 Bug Fixes
