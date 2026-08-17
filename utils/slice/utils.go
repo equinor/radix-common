@@ -5,7 +5,7 @@ import (
 	"slices"
 )
 
-// PointersOf Returnes a pointer of
+// PointersOf returns a slice of pointers to each element in the provided slice.
 func PointersOf(v any) any {
 	in := reflect.ValueOf(v)
 	out := reflect.MakeSlice(reflect.SliceOf(reflect.PointerTo(in.Type().Elem())), in.Len(), in.Len())
