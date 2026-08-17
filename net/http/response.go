@@ -170,7 +170,7 @@ func ByteArrayResponse(w http.ResponseWriter, r *http.Request, contentType strin
 }
 
 // JSONResponse Marshals response with header
-func JSONResponse(w http.ResponseWriter, r *http.Request, result interface{}) error {
+func JSONResponse(w http.ResponseWriter, r *http.Request, result any) error {
 	body, err := json.Marshal(result)
 	if err != nil {
 		return ErrorResponse(w, r, err)

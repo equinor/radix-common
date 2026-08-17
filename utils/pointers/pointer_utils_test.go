@@ -7,7 +7,7 @@ import (
 )
 
 func TestPointers(t *testing.T) {
-	var p = Ptr(1337)
+	var p = new(1337)
 	v := Val(p)
 
 	assert.Equal(t, 1337, v)

@@ -2,10 +2,11 @@ package slice
 
 import (
 	"reflect"
+	"slices"
 )
 
 // PointersOf Returnes a pointer of
-func PointersOf(v interface{}) interface{} {
+func PointersOf(v any) any {
 	in := reflect.ValueOf(v)
 	out := reflect.MakeSlice(reflect.SliceOf(reflect.PointerTo(in.Type().Elem())), in.Len(), in.Len())
 	for i := 0; i < in.Len(); i++ {
@@ -36,12 +37,7 @@ func Reduce[TSource, TAccumulation any](source []TSource, seed TAccumulation, ac
 
 // Determines whether any element of a slice satisfies a condition.
 func Any[T any](source []T, predicate func(T) bool) bool {
-	for _, v := range source {
-		if predicate(v) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(source, predicate)
 }
 
 // Determines whether all elements of a slice satisfy a condition.
@@ -81,4 +77,36 @@ func FindFirst[T any](source []T, predicate func(T) bool) (element T, ok bool) {
 		}
 	}
 	return
+}
+
+// ElementsMatch reports whether two slices are equal: the same length and all
+// elements exists in both lists, ignoring the order of the elements.
+// If there are duplicate elements, the number of appearances of each of them in both lists should match.
+func ElementsMatch[S ~[]E, E comparable](a, b S) bool {
+	if len(a) != len(b) {
+		return false
+	}
+
+	visited := make([]bool, len(b))
+
+	for _, aVal := range a {
+		var found bool
+
+		for j, bVal := range b {
+			if visited[j] {
+				continue
+			}
+			if aVal == bVal {
+				visited[j] = true
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			return false
+		}
+	}
+
+	return true
 }

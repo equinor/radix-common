@@ -27,7 +27,7 @@ func (ct CombinedTransformer) Transformer(typ reflect.Type) func(dst, src reflec
 type BoolPtrTransformer struct{}
 
 func (t BoolPtrTransformer) Transformer(typ reflect.Type) func(dst, src reflect.Value) error {
-	if typ == reflect.TypeOf(new(bool)) {
+	if typ == reflect.TypeFor[*bool]() {
 		return func(dst, src reflect.Value) error {
 			if !src.IsNil() && dst.CanSet() {
 				dst.Set(src)
@@ -43,7 +43,7 @@ type ResourceQuantityTransformer struct {
 }
 
 func (t ResourceQuantityTransformer) Transformer(typ reflect.Type) func(dst, src reflect.Value) error {
-	if typ == reflect.TypeOf(resource.Quantity{}) {
+	if typ == reflect.TypeFor[resource.Quantity]() {
 		return func(dst, src reflect.Value) error {
 			if dst.CanSet() {
 				srcVal := (src.Interface()).(resource.Quantity)

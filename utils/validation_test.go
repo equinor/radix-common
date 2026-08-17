@@ -16,7 +16,7 @@ func (obj *v) getValue() int {
 
 func TestIsNil(t *testing.T) {
 	type args struct {
-		obj interface{}
+		obj any
 	}
 	tests := []struct {
 		name string
