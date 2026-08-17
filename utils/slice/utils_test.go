@@ -10,12 +10,69 @@ import (
 )
 
 func Test_PointersOf(t *testing.T) {
-	type testObj struct{ prop string }
-	obj1 := testObj{prop: "obj1prop"}
-	obj2 := testObj{prop: "obj2prop"}
-	expected := []*testObj{&obj1, &obj2}
-	actual := slice.PointersOf([]testObj{obj1, obj2})
-	assert.Equal(t, expected, actual)
+	type obj struct{ prop string }
+
+	t.Run("nil returns empty slice", func(t *testing.T) {
+		result := slice.PointersOf[[]obj](nil)
+		assert.Empty(t, result)
+	})
+	t.Run("empty slice", func(t *testing.T) {
+		result := slice.PointersOf([]obj{})
+		assert.Empty(t, result)
+	})
+	t.Run("single element", func(t *testing.T) {
+		src := []obj{{"a"}}
+		result := slice.PointersOf(src)
+		assert.Len(t, result, 1)
+		assert.Equal(t, src[0], *result[0])
+	})
+	t.Run("multiple elements length and values", func(t *testing.T) {
+		src := []obj{{"a"}, {"b"}, {"c"}}
+		result := slice.PointersOf(src)
+		assert.Len(t, result, len(src))
+		for i, p := range result {
+			assert.Equal(t, src[i], *p)
+		}
+	})
+	t.Run("pointers are distinct", func(t *testing.T) {
+		src := []obj{{"x"}, {"x"}}
+		result := slice.PointersOf(src)
+		assert.NotSame(t, result[0], result[1])
+	})
+	t.Run("modifying source does not affect returned pointers", func(t *testing.T) {
+		src := []obj{{"original"}}
+		result := slice.PointersOf(src)
+		src[0].prop = "mutated"
+		assert.Equal(t, "original", result[0].prop)
+	})
+	t.Run("modifying returned pointer does not affect other pointers", func(t *testing.T) {
+		src := []obj{{"a"}, {"b"}}
+		result := slice.PointersOf(src)
+		result[0].prop = "changed"
+		assert.Equal(t, "b", result[1].prop)
+	})
+	t.Run("integer slice", func(t *testing.T) {
+		src := []int{1, 2, 3}
+		result := slice.PointersOf(src)
+		assert.Len(t, result, 3)
+		for i, p := range result {
+			assert.Equal(t, src[i], *p)
+		}
+	})
+	t.Run("string slice", func(t *testing.T) {
+		src := []string{"foo", "bar"}
+		result := slice.PointersOf(src)
+		assert.Len(t, result, 2)
+		assert.Equal(t, "foo", *result[0])
+		assert.Equal(t, "bar", *result[1])
+	})
+	t.Run("order is preserved", func(t *testing.T) {
+		src := []int{10, 20, 30, 40}
+		result := slice.PointersOf(src)
+		for i, p := range result {
+			assert.Equal(t, src[i], *p)
+		}
+	})
 }
 
 func Test_Map(t *testing.T) {

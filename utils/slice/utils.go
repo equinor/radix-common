@@ -1,18 +1,12 @@
 package slice
 
 import (
-	"reflect"
 	"slices"
 )
 
 // PointersOf returns a slice of pointers to each element in the provided slice.
-func PointersOf(v any) any {
-	in := reflect.ValueOf(v)
-	out := reflect.MakeSlice(reflect.SliceOf(reflect.PointerTo(in.Type().Elem())), in.Len(), in.Len())
-	for i := 0; i < in.Len(); i++ {
-		out.Index(i).Set(in.Index(i).Addr())
-	}
-	return out.Interface()
+func PointersOf[S ~[]E, E any](v S) []*E {
+	return Map(v, func(e E) *E { return &e })
 }
 
 // Projects each element of a slice into a new form.
