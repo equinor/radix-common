@@ -87,25 +87,16 @@ func ElementsMatch[S ~[]E, E comparable](a, b S) bool {
 		return false
 	}
 
-	visited := make([]bool, len(b))
+	counts := make(map[E]int, len(a))
+	for _, v := range a {
+		counts[v]++
+	}
 
-	for _, aVal := range a {
-		var found bool
-
-		for j, bVal := range b {
-			if visited[j] {
-				continue
-			}
-			if aVal == bVal {
-				visited[j] = true
-				found = true
-				break
-			}
-		}
-
-		if !found {
+	for _, v := range b {
+		if counts[v] == 0 {
 			return false
 		}
+		counts[v]--
 	}
 
 	return true
