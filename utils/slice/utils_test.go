@@ -127,7 +127,7 @@ func Test_FindFirst(t *testing.T) {
 	assert.Nil(t, foundPtr)
 }
 
-func Test_ArrayEqualElements(t *testing.T) {
+func Test_ElementsMatch(t *testing.T) {
 	t.Run("both nil", func(t *testing.T) {
 		assert.True(t, slice.ElementsMatch[[]string](nil, nil))
 	})
