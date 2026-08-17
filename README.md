@@ -95,7 +95,6 @@ Comprehensive utility functions for common operations.
 | `utils/pointers` | `Val[T]()` — Generic pointer-to-value conversion |
 | `utils/json` | `Save()`, `Load()`, `Pretty()` — Thread-safe JSON file I/O |
 | `utils/timewindow` | `TimeWindow` — Cron-like schedule validation (day + time range) |
-| `utils/errors` | Custom error utilities |
 | `utils` | String helpers, validation, random generation, time utilities |
 
 ```go
