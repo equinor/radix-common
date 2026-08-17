@@ -80,8 +80,8 @@ func FindFirst[T any](source []T, predicate func(T) bool) (element T, ok bool) {
 }
 
 // ElementsMatch reports whether two slices are equal: the same length and all
-// elements exists in both lists, ignoring the order of the elements.
-// If there are duplicate elements, the number of appearances of each of them in both lists should match.
+// elements exist in both slices, ignoring the order of the elements.
+// If there are duplicate elements, the number of appearances of each of them in both slices should match.
 func ElementsMatch[S ~[]E, E comparable](a, b S) bool {
 	if len(a) != len(b) {
 		return false
