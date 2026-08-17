@@ -82,17 +82,17 @@ func FindFirst[T any](source []T, predicate func(T) bool) (element T, ok bool) {
 // ElementsMatch reports whether two slices are equal: the same length and all
 // elements exist in both slices, ignoring the order of the elements.
 // If there are duplicate elements, the number of appearances of each of them in both slices should match.
-func ElementsMatch[S ~[]E, E comparable](a, b S) bool {
-	if len(a) != len(b) {
+func ElementsMatch[S ~[]E, E comparable](s1, s2 S) bool {
+	if len(s1) != len(s2) {
 		return false
 	}
 
-	counts := make(map[E]int, len(a))
-	for _, v := range a {
+	counts := make(map[E]int, len(s1))
+	for _, v := range s1 {
 		counts[v]++
 	}
 
-	for _, v := range b {
+	for _, v := range s2 {
 		if counts[v] == 0 {
 			return false
 		}
