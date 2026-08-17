@@ -4,9 +4,15 @@ import (
 	"slices"
 )
 
-// PointersOf returns a slice of pointers to each element in the provided slice.
-func PointersOf[S ~[]E, E any](v S) []*E {
-	return Map(v, func(e E) *E { return &e })
+// PointersOf returns a slice of pointers to copies of each element in the provided slice.
+func PointersOf[S ~[]E, E any](s S) []*E {
+	ptrSlice := make([]*E, len(s))
+
+	for i, v := range s {
+		ptrSlice[i] = &v
+	}
+
+	return ptrSlice
 }
 
 // Projects each element of a slice into a new form.
