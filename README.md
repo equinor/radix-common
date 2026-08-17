@@ -92,8 +92,7 @@ Comprehensive utility functions for common operations.
 | Package | Functions |
 |---------|-----------|
 | `utils/slice` | `Map()`, `Reduce()`, `Any()`, `All()`, `FindAll()`, `FindFirst()`, `FindIndex()` |
-| `utils/pointers` | `Ptr[T]()`, `Val[T]()` — Generic pointer/value conversion |
-| `utils/maps` | `GetKeysFromMap()`, `MergeMaps()`, `FromString()`, `ToString()` |
+| `utils/pointers` | `Val[T]()` — Generic pointer-to-value conversion |
 | `utils/json` | `Save()`, `Load()`, `Pretty()` — Thread-safe JSON file I/O |
 | `utils/timewindow` | `TimeWindow` — Cron-like schedule validation (day + time range) |
 | `utils/errors` | Custom error utilities |
@@ -104,7 +103,6 @@ import "github.com/equinor/radix-common/utils/slice"
 import "github.com/equinor/radix-common/utils/pointers"
 
 doubled := slice.Map(numbers, func(n int) int { return n * 2 })
-ptr := pointers.Ptr("value")
 val := pointers.Val(ptr)
 ```
 

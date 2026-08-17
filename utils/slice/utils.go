@@ -4,12 +4,12 @@ import (
 	"slices"
 )
 
-// PointersOf returns a slice of pointers to copies of each element in the provided slice.
+// PointersOf returns a slice of pointers to each element in the provided slice.
 func PointersOf[S ~[]E, E any](s S) []*E {
 	ptrSlice := make([]*E, len(s))
 
-	for i, v := range s {
-		ptrSlice[i] = &v
+	for i := range s {
+		ptrSlice[i] = &s[i]
 	}
 
 	return ptrSlice

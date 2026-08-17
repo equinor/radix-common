@@ -39,12 +39,6 @@ func Test_PointersOf(t *testing.T) {
 		result := slice.PointersOf(src)
 		assert.NotSame(t, result[0], result[1])
 	})
-	t.Run("modifying source does not affect returned pointers", func(t *testing.T) {
-		src := []obj{{"original"}}
-		result := slice.PointersOf(src)
-		src[0].prop = "mutated"
-		assert.Equal(t, "original", result[0].prop)
-	})
 	t.Run("modifying returned pointer does not affect other pointers", func(t *testing.T) {
 		src := []obj{{"a"}, {"b"}}
 		result := slice.PointersOf(src)
