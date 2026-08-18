@@ -76,7 +76,6 @@ Framework integrations for common Go libraries.
 |---------|-------------|
 | `pkg/gin` | Zerolog middleware for Gin — request logging with unique request IDs |
 | `pkg/gorm` | Zerolog logger for GORM — SQL query logging with elapsed time |
-| `pkg/docker` | Docker registry auth config models for Kubernetes secrets |
 
 ```go
 import "github.com/equinor/radix-common/pkg/gin"
@@ -93,9 +92,8 @@ Comprehensive utility functions for common operations.
 |---------|-----------|
 | `utils/slice` | `Map()`, `Reduce()`, `Any()`, `All()`, `FindAll()`, `FindFirst()`, `FindIndex()` |
 | `utils/pointers` | `Val[T]()` — Generic pointer-to-value conversion |
-| `utils/json` | `Save()`, `Load()`, `Pretty()` — Thread-safe JSON file I/O |
 | `utils/timewindow` | `TimeWindow` — Cron-like schedule validation (day + time range) |
-| `utils` | String helpers, validation, random generation, time utilities |
+| `utils` | validation, time utilities |
 
 ```go
 import "github.com/equinor/radix-common/utils/slice"

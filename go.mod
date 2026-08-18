@@ -3,7 +3,6 @@ module github.com/equinor/radix-common
 go 1.26.2
 
 require (
-	dario.cat/mergo v1.0.2
 	github.com/elnormous/contenttype v1.0.4
 	github.com/gin-gonic/gin v1.12.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
