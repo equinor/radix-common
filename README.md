@@ -90,10 +90,8 @@ Comprehensive utility functions for common operations.
 
 | Package | Functions |
 |---------|-----------|
-| `utils/slice` | `Map()`, `Reduce()`, `Any()`, `All()`, `FindAll()`, `FindFirst()`, `FindIndex()` |
-| `utils/pointers` | `Val[T]()` — Generic pointer-to-value conversion |
+| `utils/slice` | `Map()`, `Reduce()`, `Any()`, `All()`, `FindAll()`, `FindFirst()`, `FindIndex()`, `PointersOf()` |
 | `utils/timewindow` | `TimeWindow` — Cron-like schedule validation (day + time range) |
-| `utils` | validation, time utilities |
 
 ```go
 import "github.com/equinor/radix-common/utils/slice"
