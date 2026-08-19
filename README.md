@@ -31,7 +31,7 @@ Comprehensive utility functions for common operations.
 
 | Package | Functions |
 |---------|-----------|
-| `utils/slice` | `Map()`, `Reduce()`, `Any()`, `All()`, `FindAll()`, `FindFirst()`, `FindIndex()`, `PointersOf()` |
+| `utils/slice` | `Map()`, `Reduce()`, `Any()`, `All()`, `FindAll()`, `FindFirst()`, `FindIndex()`, `PointersOf()`, `ElementsMatch()` |
 | `utils/timewindow` | `TimeWindow` — Cron-like schedule validation (day + time range) |
 
 ```go
