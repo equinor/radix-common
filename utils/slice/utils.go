@@ -1,17 +1,18 @@
 package slice
 
 import (
-	"reflect"
+	"slices"
 )
 
-// PointersOf Returnes a pointer of
-func PointersOf(v interface{}) interface{} {
-	in := reflect.ValueOf(v)
-	out := reflect.MakeSlice(reflect.SliceOf(reflect.PointerTo(in.Type().Elem())), in.Len(), in.Len())
-	for i := 0; i < in.Len(); i++ {
-		out.Index(i).Set(in.Index(i).Addr())
+// PointersOf returns a slice of pointers to each element in the provided slice.
+func PointersOf[S ~[]E, E any](s S) []*E {
+	ptrSlice := make([]*E, len(s))
+
+	for i := range s {
+		ptrSlice[i] = &s[i]
 	}
-	return out.Interface()
+
+	return ptrSlice
 }
 
 // Projects each element of a slice into a new form.
@@ -36,12 +37,7 @@ func Reduce[TSource, TAccumulation any](source []TSource, seed TAccumulation, ac
 
 // Determines whether any element of a slice satisfies a condition.
 func Any[T any](source []T, predicate func(T) bool) bool {
-	for _, v := range source {
-		if predicate(v) {
-			return true
-		}
-	}
-	return false
+	return slices.ContainsFunc(source, predicate)
 }
 
 // Determines whether all elements of a slice satisfy a condition.
@@ -81,4 +77,27 @@ func FindFirst[T any](source []T, predicate func(T) bool) (element T, ok bool) {
 		}
 	}
 	return
+}
+
+// ElementsMatch reports whether two slices are equal: the same length and all
+// elements exist in both slices, ignoring the order of the elements.
+// If there are duplicate elements, the number of appearances of each of them in both slices should match.
+func ElementsMatch[S ~[]E, E comparable](s1, s2 S) bool {
+	if len(s1) != len(s2) {
+		return false
+	}
+
+	counts := make(map[E]int, len(s1))
+	for _, v := range s1 {
+		counts[v]++
+	}
+
+	for _, v := range s2 {
+		if counts[v] == 0 {
+			return false
+		}
+		counts[v]--
+	}
+
+	return true
 }
