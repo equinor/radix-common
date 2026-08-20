@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.0](https://github.com/equinor/radix-common/compare/v1.12.4..v1.13.0) - 2026-08-20
+
+### 🚀 Features
+
+- *(cleanup)* Update codebase to use modern go constructs, remove code that should be repo specific implementation (#72) - ([d6a401c](https://github.com/equinor/radix-common/commit/d6a401cfe005a5fc54e48b548e7d8747535f9120)) by @nilsgstrabo in [#72](https://github.com/equinor/radix-common/pull/72)
+
+
 ## [1.12.4](https://github.com/equinor/radix-common/compare/v1.12.3..v1.12.4) - 2026-07-27
 
 ### 🐛 Bug Fixes
